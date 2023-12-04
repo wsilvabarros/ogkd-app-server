@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Dashboard</title>
+        <!-- Adicionando o Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- Adicionando Font Awesome para ícones -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+        <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                background-color: #f8f9fa;
+            }
+    
+            .navbar {
+                background-color: #ffffff;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            }
+    
+            .navbar-brand {
+                font-size: 1.5rem;
+                margin-right: 15px;
+            }
+    
+            .navbar-nav.ml-auto {
+                align-items: center;
+            }
+    
+            .avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+    
+            .user-menu {
+                position: relative;
+                cursor: pointer;
+            }
+    
+            .dropdown-menu {
+                right: 0;
+                left: auto;
+            }
+            
+        .paid {
+            background-color: #aaffaa;
+        }
+
+        .unpaid {
+            background-color: #ffaaaa;
+        }
+        .carda {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px;
+            display: inline-block;
+            width: 200px;
+            text-align: center;
+        }
+
+        .payment-link {
+            margin-top: 8px;
+            display: block;
+            text-decoration: none;
+            color: #007bff;
+        }
+    
+            @media (max-width: 767px) {
+                .navbar-brand {
+                    margin-right: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand navbar-light">
+            <a class="navbar-brand" href="#">Logo</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto ">
+                    <li class="nav-item user-menu d-flex flex-direction-row">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="userDropdown"
+                            role="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            John Doe
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="#">Perfil</a>
+                            <a class="dropdown-item" href="#">Configurações</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="col-md-2 d-none d-md-block sidebar">
+                    <div class="sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">
+                                    <i class="fas fa-home"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-chart-line"></i>
+                                    Gráficos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-cog"></i>
+                                    Configurações
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 main-content">
+                    <h2>Conteúdo do Dashboard</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Card de Exemplo</h5>
+                            <p class="card-text">Este é um exemplo de card no seu dashboard.</p>
+                        </div>
+                    </div>
+                    <!-- Adicione mais conteúdo conforme necessário -->
+                    <div id="dashboard"></div>
+                </main>
+            </div>
+        </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/mensalidades-usuario')
+                .then(response => response.json())
+                .then(data => {
+                    const dashboardElement = document.getElementById('dashboard');
+                    data.forEach(mensalidade => {
+                        const cardElement = document.createElement('div');
+                        cardElement.className = 'carda ' + (mensalidade.pago ? 'paid' : 'unpaid');
+                        cardElement.innerHTML = `
+                            <h3>Mensalidade ${mensalidade.id}</h3>
+                            <p>Data de Vencimento: ${new Date(mensalidade.data_vencimento).toLocaleDateString()}</p>
+                            <p>Valor: R$ ${parseFloat(mensalidade.valor).toFixed(2)}</p>
+                            <p>Status: ${mensalidade.pago ? 'Pago' : 'Não Pago'}</p>
+                            <a class="payment-link" href="#">Pagar</a>
+                        `;
+                        dashboardElement.appendChild(cardElement);
+                    });
+                })
+                .catch(error => console.error('Erro ao buscar mensalidades:', error));
+        });
+        </script>
+        <!-- Adicionando o Bootstrap JS (opcional, dependendo do seu caso de uso) -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
